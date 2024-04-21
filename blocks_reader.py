@@ -11,16 +11,23 @@ UID PK1 gives PK2 payment transaction_fee sig1
 '''
 
 class Transaction:
-    def __init__(self, uid, pk1, pk2, payment, transaction_fee, sig1):
+    def __init__(self, uid, pk1, pk2, payment, transaction_fee):
         self.uid = uid
         self.payer = pk1
         self.payee = pk2
         self.payment = payment
         self.transaction_fee = transaction_fee
+
+    def __str__(self):
+        return f'Transaction uid: {self.uid}, from: {self.payer}, to: {self.payee}, payment: {self.payment}, transaction_fee: {self.transaction_fee} \n'
+
+class SignedTransaction(Transaction):
+    def __init__(self, uid, pk1, pk2, payment, transaction_fee, sig1):
+        Transaction.__init__(uid, pk1, pk2, payment, transaction_fee)
         self.sig1 = sig1
 
     def __str__(self):
-        return f'Transaction uid: {self.uid}, from: {self.payer}, to: {self.payee}, payment: {self.payment}, transaction_fee: {self.transaction_fee}, sig1: {self.sig1} \n'
+        return f'{Transaction.__str__()}, sig1: {self.sig1} \n'
 
     def parse_transaction_line(line):
         line = line.split(' ')
@@ -30,7 +37,7 @@ class Transaction:
         payment = float(line[3])
         transaction_fee = float(line[4])
         sig1 = line[5]
-        return Transaction(uid, payer, payee, payment, transaction_fee, sig1)
+        return SignedTransaction(uid, payer, payee, payment, transaction_fee, sig1)
 
 class Block:
     def __init__(self, height, prev_block_hash, cur_block_hash, miner_pub_key, tx_count):
