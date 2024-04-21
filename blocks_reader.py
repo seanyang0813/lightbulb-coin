@@ -46,33 +46,34 @@ class Block:
 
     def __str__(self):
         res = f'Block height: {self.height}, prev_block_hash: {self.prev_block_hash}, cur_block_hash: {self.cur_block_hash}, miner_pub_key: {self.miner_pub_key}, tx_count: {self.tx_count}'
-        res += 'Transactions:\n'
+        res += '\nTransactions:\n'
         for transaction in self.transactions:
             res += transaction.__str__()
         return res
 
 
 def read_blocks(file):
+    blocks = []
     with open(file, 'r') as f:
         lines_list = f.read().splitlines()
         index = 0
         if len(lines_list) == 0:
             return
         while index < len(lines_list):
-            index = read_block(lines_list, index)
+            (index,block) = read_block(lines_list, index)
+            blocks.append(block)
             index += 1
+    return blocks
             
             
 def read_block(lines_list, index):
-    print(index)
     block = Block(int(lines_list[index]), lines_list[index + 1], lines_list[index + 2], lines_list[index + 3], int(lines_list[index + 4]))
     index += 5
     for i in range(block.tx_count):
         transaction = Transaction.parse_transaction_line(lines_list[index])
         block.add_transaction(transaction)
         index += 1
-    print(block)
-    return index
+    return (index, block)
 
 
 if __name__ == '__main__':
