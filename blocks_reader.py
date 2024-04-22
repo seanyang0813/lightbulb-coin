@@ -36,7 +36,7 @@ class SignedTransaction(Transaction):
         return f'{Transaction.__str__(self)}, sig1: {self.sig1} \n'
 
     def parse_transaction_line(line):
-        line = line.split(' ')
+        line = line.strip().split(' ')
         uid = line[0]
         payer = line[1]
         payee = line[2]
@@ -59,11 +59,10 @@ class Block:
         self.miner_pub_key = miner_pub_key
         self.tx_count = tx_count
         self.transactions = []
-        self.block_string = ""
     
     def add_transaction(self, transaction):
         self.transactions.append(transaction)
-
+        self.tx_count = len(self.transactions)
     def __str__(self):
         res = f'Block height: {self.height}, prev_block_hash: {self.prev_block_hash}, cur_block_hash: {self.cur_block_hash}, miner_pub_key: {self.miner_pub_key}, tx_count: {self.tx_count}'
         res += '\nTransactions:\n'
@@ -71,10 +70,11 @@ class Block:
             res += transaction.__str__()
         return res
 
-    def build_block_string(self):
-        res = f'{self.height}\n{self.prev_block_hash}\n{self.cur_block_hash}\n{self.miner_pub_key}\n{self.tx_count}\n'
+    def build_string_for_block(self):
+        res = str(self.height) + "\n" + str(self.prev_block_hash) + "\n" + str(self.cur_block_hash) + "\n" + str(self.miner_pub_key) + "\n" + str(self.tx_count) + "\n"
         for transaction in self.transactions:
-            res += transaction.build_transaction_line() + '\n'
+            res += (transaction.build_transaction_line() + "\n")
+        res += "\n"
         return res
 
 
@@ -87,6 +87,9 @@ def read_blocks(file):
         if len(lines_list) == 0:
             return
         while index < len(lines_list):
+            if (lines_list[index].strip() == ""):
+                index += 1
+                continue
             (index,block) = read_block(lines_list, index)
             blocks.append(block)
             index += 1
@@ -94,13 +97,10 @@ def read_blocks(file):
             
             
 def read_block(lines_list, index):
-    block = Block(int(lines_list[index]), lines_list[index + 1], lines_list[index + 2], lines_list[index + 3], int(lines_list[index + 4]))
-    for i in range(5):
-        block.block_string += lines_list[index + i]
+    block = Block(int(lines_list[index]), lines_list[index + 1], lines_list[index + 2], lines_list[index + 3], int(lines_list[index + 4])) 
     index += 5
     for i in range(block.tx_count):
         transaction = SignedTransaction.parse_transaction_line(lines_list[index])
-        block.block_string += lines_list[index]
         block.add_transaction(transaction)
         index += 1
     return (index, block)

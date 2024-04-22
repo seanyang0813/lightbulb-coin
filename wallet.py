@@ -42,18 +42,18 @@ def main():
 
 
 
-    # check the folder blocks_tracker and read the first file in the list
-    if not os.path.exists('blocks_tracker'):
-        print("there is no active node")
-        exit()
-    else :
-        # find all files in the folder blocks_tracker
-        files = os.listdir('blocks_tracker')
-        # read the first file in the list
-        file = files[0]
-        blocks = read_blocks('blocks_tracker/' + file)
-        print("your balance is: ", get_balance(public_key.to_string().hex(), blocks))
+   
     while True:
+         # check the folder blocks_tracker and read the first file in the list
+        if not os.path.exists('blocks_tracker'):
+            print("there is no active node")
+            exit()
+        else :
+            # find all files in the folder blocks_tracker
+            files = os.listdir('blocks_tracker')
+            # read the first file in the list
+            file = files[0]
+            blocks = read_blocks('blocks_tracker/' + file)
         print("Select the menu options below with the number (ex: 1)")
         print("1. Get current balance")
         print("2. Submit transaction")

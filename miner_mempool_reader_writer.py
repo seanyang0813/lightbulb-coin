@@ -25,7 +25,7 @@ def remove_finished_transactions_from_mempool(transactions_list):
     # open mempool txt 
     with open('mempool/mempool.txt', 'r') as file:
         lines = file.readlines()
-        # Filter lines; keep lines that do not start with '1'
+        print("signature to remove set: ", signature_to_remove_set)
         filtered_lines = [line for line in lines if not line.split(' ')[-1] not in signature_to_remove_set]
         # Write the filtered lines back to the file
         with open('mempool/mempool.txt', 'w') as file:

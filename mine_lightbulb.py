@@ -2,7 +2,7 @@ import hashlib
 import binascii
 from bitstring import BitArray
 
-match_length = 8
+match_length = 17
 match_binary = [0] * match_length # Uses a simple binary
 
 
@@ -19,12 +19,14 @@ def is_next_block(message):
 
 # mine assuming that the new block is valid
 def mine_lightbulb_coin(prev_block, new_block):
-    base_message = prev_block + new_block #Join the strings
+    base_message = prev_block + " " + new_block #Join the strings
     mined_hash = 0
     message_binary = base_message.encode()
+    print("message binary: ", message_binary)
+    print("base message: ", base_message)
     # next block is valid only if the hash's first bits match the 'match binary'
     while (not is_next_block(hashlib.md5(binascii.hexlify(message_binary + str(mined_hash).encode())))):
         mined_hash += 1
-    return mined_hash
+    return str(mined_hash)
 
 print(mine_lightbulb_coin('', 'Test ledger'))

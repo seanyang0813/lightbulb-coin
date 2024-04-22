@@ -23,13 +23,13 @@ def verify_signature(vk_str, message, signature):
 def generate_signature(sk, message):
     return sk.sign(message.encode()).hex()
 
-def generate_signature(sk, transaction):
-    id = transaction.uid
-    public_key = transaction.payer
-    payee = transaction.payee
-    amount = transaction.payment
-    fee = transaction.transaction_fee
-    return sk.sign(f'{id} {public_key.to_string().hex()} {payee}  {amount} {fee}'.encode('utf-8')).hex()
+# def generate_signature(sk, transaction):
+#     id = transaction.uid
+#     public_key = transaction.payer
+#     payee = transaction.payee
+#     amount = transaction.payment
+#     fee = transaction.transaction_fee
+#     return sk.sign(f'{id} {public_key.to_string().hex()} {payee}  {amount} {fee}'.encode('utf-8')).hex()
     
 
 if __name__ == '__main__':
