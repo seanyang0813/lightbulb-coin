@@ -70,6 +70,13 @@ class Block:
             res += transaction.__str__()
         return res
 
+    def build_block_string(self):
+        res = f'{self.height}\n{self.prev_block_hash}\n{self.cur_block_hash}\n{self.miner_pub_key}\n{self.tx_count}\n'
+        for transaction in self.transactions:
+            res += transaction.build_transaction_line() + '\n'
+        return res
+
+
 
 def read_blocks(file):
     blocks = []
