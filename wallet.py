@@ -71,6 +71,10 @@ def main():
             transaction = SignedTransaction(id, public_key.to_string().hex(), payee, amount, fee, signature)
             print(transaction)
             print("Submitted transaction")
+            # open memepool/mempool.txt and add the transaction to the file
+            mempool_file = open('mempool/mempool.txt', 'a')
+            mempool_file.write(transaction.build_transaction_line() + '\n')
+            mempool_file.close()
         elif choice == 3:
             print("exiting")
             exit()

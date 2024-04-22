@@ -36,7 +36,6 @@ class SignedTransaction(Transaction):
         return f'{Transaction.__str__(self)}, sig1: {self.sig1} \n'
 
     def parse_transaction_line(line):
-        print("debug parse transaction line" + line)
         line = line.split(' ')
         uid = line[0]
         payer = line[1]
