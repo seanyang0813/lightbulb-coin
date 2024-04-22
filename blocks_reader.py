@@ -59,6 +59,7 @@ class Block:
         self.miner_pub_key = miner_pub_key
         self.tx_count = tx_count
         self.transactions = []
+        self.block_string = ""
     
     def add_transaction(self, transaction):
         self.transactions.append(transaction)
@@ -94,9 +95,12 @@ def read_blocks(file):
             
 def read_block(lines_list, index):
     block = Block(int(lines_list[index]), lines_list[index + 1], lines_list[index + 2], lines_list[index + 3], int(lines_list[index + 4]))
+    for i in range(5):
+        block.block_string += lines_list[index + i]
     index += 5
     for i in range(block.tx_count):
         transaction = SignedTransaction.parse_transaction_line(lines_list[index])
+        block.block_string += lines_list[index]
         block.add_transaction(transaction)
         index += 1
     return (index, block)

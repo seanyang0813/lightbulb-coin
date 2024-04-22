@@ -4,6 +4,9 @@ from gen_read_key import load_string_keys
 from miner_mempool_reader_writer import read_mempool
 from blocks_reader import read_blocks
 from balance_mapping import  get_all_balances
+import binascii
+import hashlib
+import mine_lightbulb
 from gen_read_key import verify_signature
 
 # get the copy of the blocks 
@@ -76,10 +79,16 @@ def main():
             if check_transaction_is_valid(balance_mapping, blocks, transaction, transaction.payer):
                 good_transactions.append(transaction)
         print("good transactions: ", good_transactions)
+        new_block = ""
+        # add missing header info
 
-
-
-
+        # add header for new block
+        new_block += str(hashlib.md5(binascii.hexlify(blocks[-1].block_string.encode())).digest())
+        for transaction in good_transactions:
+            new_block += str(transaction)
+        hash_proof = mine_lightbulb.mine_lightbulb_coin(blocks[-1].block_string, new_block)
+        new_block += str(hash_proof)
+        # Post new block as new entry in blockchain via announce
 
 if __name__ == '__main__':
     main()
