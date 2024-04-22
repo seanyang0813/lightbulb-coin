@@ -44,6 +44,9 @@ class SignedTransaction(Transaction):
         transaction_fee = float(line[4])
         sig1 = line[5]
         return SignedTransaction(uid, payer, payee, payment, transaction_fee, sig1)
+    
+    def __gt__(self, transaction):
+        return self.transaction_fee > transaction.transaction_fee
 
     def build_transaction_line(self):
         return f'{self.uid} {self.payer} {self.payee} {self.payment} {self.transaction_fee} {self.sig1}'
