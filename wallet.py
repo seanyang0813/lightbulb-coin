@@ -7,7 +7,7 @@ submit transaction to the block chain
 the public private key pair is always stored with the name being public key and the file containing both public and private key
 '''
 
-from blocks_reader import read_blocks, Transaction
+from blocks_reader import read_blocks, Transaction, SignedTransaction
 from balance_mapping import get_balance, get_all_balances
 from gen_read_key import load_string_keys, generate_string_keys, generate_signature
 import os
@@ -68,7 +68,7 @@ def main():
             id = uuid.uuid1()
             print(private_key.to_string().hex())
             signature = generate_signature(private_key, f'{id} {public_key.to_string().hex()} {payee}  {amount} {fee}')
-            transaction = Transaction(id, public_key.to_string().hex(), payee, amount, fee, signature)
+            transaction = SignedTransaction(id, public_key.to_string().hex(), payee, amount, fee, signature)
             print(transaction)
             print("Submitted transaction")
         elif choice == 3:

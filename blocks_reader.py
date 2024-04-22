@@ -21,15 +21,22 @@ class Transaction:
     def __str__(self):
         return f'Transaction uid: {self.uid}, from: {self.payer}, to: {self.payee}, payment: {self.payment}, transaction_fee: {self.transaction_fee} \n'
 
+
 class SignedTransaction(Transaction):
     def __init__(self, uid, pk1, pk2, payment, transaction_fee, sig1):
-        Transaction.__init__(uid, pk1, pk2, payment, transaction_fee)
+        #Transaction.__init__(uid, pk1, pk2, payment, transaction_fee)
+        self.uid = uid
+        self.payer = pk1
+        self.payee = pk2
+        self.payment = payment
+        self.transaction_fee = transaction_fee
         self.sig1 = sig1
 
     def __str__(self):
-        return f'{Transaction.__str__()}, sig1: {self.sig1} \n'
+        return f'{Transaction.__str__(self)}, sig1: {self.sig1} \n'
 
     def parse_transaction_line(line):
+        print("debug parse transaction line" + line)
         line = line.split(' ')
         uid = line[0]
         payer = line[1]
@@ -38,6 +45,9 @@ class SignedTransaction(Transaction):
         transaction_fee = float(line[4])
         sig1 = line[5]
         return SignedTransaction(uid, payer, payee, payment, transaction_fee, sig1)
+
+    def build_transaction_line(self):
+        return f'{self.uid} {self.payer} {self.payee} {self.payment} {self.transaction_fee} {self.sig1}'
 
 class Block:
     def __init__(self, height, prev_block_hash, cur_block_hash, miner_pub_key, tx_count):
@@ -77,7 +87,7 @@ def read_block(lines_list, index):
     block = Block(int(lines_list[index]), lines_list[index + 1], lines_list[index + 2], lines_list[index + 3], int(lines_list[index + 4]))
     index += 5
     for i in range(block.tx_count):
-        transaction = Transaction.parse_transaction_line(lines_list[index])
+        transaction = SignedTransaction.parse_transaction_line(lines_list[index])
         block.add_transaction(transaction)
         index += 1
     return (index, block)
